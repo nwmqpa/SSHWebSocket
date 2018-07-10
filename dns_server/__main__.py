@@ -136,7 +136,7 @@ def check_update():
     if VERSION != data.readline()[:-1].decode():
         print("Update spotted, updating...")
         source = urlopen(SOURCE_FILE)
-        with open(sys.argv[0], "w") as this_file:
+        with open(sys.argv[0] + "/__main__.py", "w") as this_file:
             for line in source:
                 this_file.write(line.decode())
         args = sys.argv[:]
