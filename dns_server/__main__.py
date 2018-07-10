@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 import os
+from settings import settings
 from urllib.request import urlopen, urlcleanup
 from twisted.web.static import File
 from twisted.python import log
@@ -154,7 +155,7 @@ if __name__ == "__main__":
     except:
         print("Can't connect to update server.")
     log.startLogging(sys.stdout)
-    factory = WebSSHFactory(u"ws://0.0.0.0:8080")
+    factory = WebSSHFactory(settings["url"])
     factory.protocol = SomeServerProtocol
     reactor.listenTCP(8080, factory)
     reactor.run()
