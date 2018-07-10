@@ -28,6 +28,7 @@ SOURCE_FILE = (
     "https://raw.githubusercontent.com/nwmqpa/SSHWebSocket/master/dns_server/__main__.py"
 )
 
+
 class SomeServerProtocol(websocket.WebSocketServerProtocol):
     """Protocol defining where are the messages sended."""
 
