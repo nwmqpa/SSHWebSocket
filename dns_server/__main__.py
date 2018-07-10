@@ -5,7 +5,7 @@ import json
 import subprocess
 import sys
 import os
-from urllib.request import urlopen
+from urllib.request import urlopen, urlcleanup
 from twisted.web.static import File
 from twisted.python import log
 from twisted.web.server import Site
@@ -13,7 +13,7 @@ from twisted.internet import reactor
 from autobahn.twisted import websocket
 
 """Current version of the program."""
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 """Startup CWD of the program."""
 STARTUP_CWD = os.getcwd()
@@ -147,6 +147,7 @@ def check_update():
         print("No update available.")
 
 if __name__ == "__main__":
+    urlcleanup()
     check_update()
     log.startLogging(sys.stdout)
     factory = WebSSHFactory(u"ws://0.0.0.0:8080")
