@@ -1,0 +1,11 @@
+[Unit]
+Description=Python SSH DNS Server
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/pi/dns_server
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

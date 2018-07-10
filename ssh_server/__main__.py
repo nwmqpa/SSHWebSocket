@@ -6,6 +6,23 @@ import thread
 import time
 import subprocess
 import os
+from urllib.request import urlopen, urlcleanup
+
+"""Current version of the program."""
+VERSION = "0.0.1"
+
+"""Startup CWD of the program."""
+STARTUP_CWD = os.getcwd()
+
+"""Online file containing the newest version number."""
+VERSION_FILE = (
+    "https://raw.githubusercontent.com/nwmqpa/SSHWebSocket/master/ssh_server/version"
+)
+
+"""Online file containing the updated source code."""
+SOURCE_FILE = (
+    "https://raw.githubusercontent.com/nwmqpa/SSHWebSocket/master/ssh_server/__main__.py"
+)
 
 
 class SSHServer(websocket.WebSocketApp):
@@ -51,7 +68,29 @@ class SSHServer(websocket.WebSocketApp):
                 ws.send(con_infos)
             run()
 
+
+def check_update():
+    """Check the update of the current script."""
+    data = urlopen(VERSION_FILE)
+    if VERSION != data.readline()[:-1].decode():
+        print("Update spotted, updating...")
+        source = urlopen(SOURCE_FILE)
+        with open(sys.argv[0] + "/__main__.py", "w") as this_file:
+            for line in source:
+                this_file.write(line.decode())
+        args = sys.argv[:]
+        args.insert(0, sys.executable)
+        os.chdir(STARTUP_CWD)
+        os.execv(sys.executable, args)
+    else:
+        print("No update available.")
+
 if __name__ == "__main__":
+    urlcleanup()
+    try:
+        check_update()
+    except:
+        print("Can't connect to update server.")
     websocket.enableTrace(True)
-    ws = SSHServer("ws://192.168.1.23:8080")
+    ws = SSHServer("ws://0.0.0.0:8080")
     ws.run_forever()
