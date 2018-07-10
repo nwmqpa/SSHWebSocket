@@ -13,7 +13,7 @@ from twisted.internet import reactor
 from autobahn.twisted import websocket
 
 """Current version of the program."""
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 """Startup CWD of the program."""
 STARTUP_CWD = os.getcwd()
