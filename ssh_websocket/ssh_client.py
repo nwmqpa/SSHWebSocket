@@ -6,7 +6,7 @@ import json
 async def hello():
     """Send a command."""
     async with websockets.connect(
-            'ws://localhost:8080') as websocket:
+            'ws://nwmqpa.com:8080') as websocket:
         await websocket.send(b"list")
         slave_list = await websocket.recv()
         print(" ".join([
@@ -27,5 +27,9 @@ async def hello():
             print(returned["stdout"][:-1])
             print(returned["stderr"][:-1])
 
-while True:
-    asyncio.get_event_loop().run_until_complete(hello())
+def main():
+    while True:
+        asyncio.get_event_loop().run_until_complete(hello())
+
+if __name__ == "__main__":
+    main()

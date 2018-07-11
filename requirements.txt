@@ -1,4 +1,0 @@
-websocket-client
-websockets
-twisted
-autobahn

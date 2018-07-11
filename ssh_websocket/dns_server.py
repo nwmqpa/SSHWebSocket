@@ -5,29 +5,11 @@ import json
 import subprocess
 import sys
 import os
-from settings import settings
-from urllib.request import urlopen, urlcleanup
 from twisted.web.static import File
 from twisted.python import log
 from twisted.web.server import Site
 from twisted.internet import reactor
 from autobahn.twisted import websocket
-
-"""Current version of the program."""
-VERSION = "0.0.3"
-
-"""Startup CWD of the program."""
-STARTUP_CWD = os.getcwd()
-
-"""Online file containing the newest version number."""
-VERSION_FILE = (
-    "https://raw.githubusercontent.com/nwmqpa/SSHWebSocket/master/dns_server/version"
-)
-
-"""Online file containing the updated source code."""
-SOURCE_FILE = (
-    "https://raw.githubusercontent.com/nwmqpa/SSHWebSocket/master/dns_server/__main__.py"
-)
 
 
 class SomeServerProtocol(websocket.WebSocketServerProtocol):
@@ -132,30 +114,13 @@ class WebSSHFactory(websocket.WebSocketServerFactory):
         client.sendMessage(json.dumps(slaves).encode())
 
 
-def check_update():
-    """Check the update of the current script."""
-    data = urlopen(VERSION_FILE)
-    if VERSION != data.readline()[:-1].decode():
-        print("Update spotted, updating...")
-        source = urlopen(SOURCE_FILE)
-        with open(sys.argv[0] + "/__main__.py", "w") as this_file:
-            for line in source:
-                this_file.write(line.decode())
-        args = sys.argv[:]
-        args.insert(0, sys.executable)
-        os.chdir(STARTUP_CWD)
-        os.execv(sys.executable, args)
-    else:
-        print("No update available.")
-
-if __name__ == "__main__":
-    urlcleanup()
-    try:
-        check_update()
-    except:
-        print("Can't connect to update server.")
+def main():
     log.startLogging(sys.stdout)
-    factory = WebSSHFactory(settings["url"])
+    factory = WebSSHFactory("ws://0.0.0.0:8080")
     factory.protocol = SomeServerProtocol
     reactor.listenTCP(8080, factory)
     reactor.run()
+
+
+if __name__ == "__main__":
+    main()
