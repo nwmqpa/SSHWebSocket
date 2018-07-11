@@ -5,7 +5,6 @@ import json
 import subprocess
 import sys
 import os
-from settings import settings
 from urllib.request import urlopen, urlcleanup
 from twisted.web.static import File
 from twisted.python import log
