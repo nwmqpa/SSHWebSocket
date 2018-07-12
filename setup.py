@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ssh-websocket",
-    version="0.0.2",
+    version="0.0.3",
     author="Thomas Nicollet",
     author_email="thomas.nicollet@epitech.eu",
     description="A Stable implementation of a SSH server over websocket",

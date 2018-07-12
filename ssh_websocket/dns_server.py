@@ -52,7 +52,7 @@ class SomeServerProtocol(websocket.WebSocketServerProtocol):
                 print("Unknown message.")
         else:
             if "type" in returned.keys():
-                self.factory.register_slave(self, returned["name"])
+                self.factory.register_slave(self, returned["name"], returned["pswd"])
             if "stdout" in returned.keys():
                 self.factory.sendReturn(self, returned)
             if "command" in returned.keys():
@@ -96,14 +96,18 @@ class WebSSHFactory(websocket.WebSocketServerFactory):
 
     def sendCommand(self, client, infos):
         """Send a command to the registered slave."""
-        self.links.append({"master": client, "slave": infos["slave"]})
         for i, v in self.clients.items():
             if v["name"] == infos["slave"]:
-                v["object"].sendMessage(infos["command"].encode())
+                if infos["pswd"] == v["pswd"]:
+                    self.links.append({"master": client, "slave": infos["slave"]})
+                    v["object"].sendMessage(infos["command"].encode())
+                else:
+                    client.sendMessage(json.dumps({"stderr": "Bad password !", "stdout": ""}).encode())
 
-    def register_slave(self, client, slave_uuid):
+    def register_slave(self, client, slave_uuid, slave_pswd):
         """Register a slave to the list of slaves."""
         self.clients[client.peer]["name"] = slave_uuid
+        self.clients[client.peer]["pswd"] = slave_pswd
 
     def list_clients(self, client):
         """List all clients registered."""

@@ -7,7 +7,7 @@ import time
 import subprocess
 import os
 import sys
-
+import hashlib
 
 def on_message(ws, message):
     """Load on receiving a message."""
@@ -43,7 +43,8 @@ def on_open(ws):
     def run(*args):
         con_infos = json.dumps({
             "type": "slave",
-            "name": os.uname()[1]
+            "name": os.uname()[1],
+            "pswd": hashlib.sha512(sys.argv[2].encode()).hexdigest()
             })
         ws.send(con_infos)
     run()
